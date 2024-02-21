@@ -35,7 +35,7 @@ class MenuAdapter(
 
                 var check = true
 
-                this.ivPosition.setOnClickListener {
+                this.rlAa.setOnClickListener {
 
                     if (check) {
 

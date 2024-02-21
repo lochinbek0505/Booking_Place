@@ -32,7 +32,7 @@ class LoginActivity : AppCompatActivity() {
 
         if(uid!=""){
 
-            startActivity(Intent(this,MainActivity::class.java))
+            startActivity(Intent(this, HomeActivity::class.java))
             finish()
 
         }
@@ -55,7 +55,7 @@ class LoginActivity : AppCompatActivity() {
                                 editor.putString("uid", user!!.uid)
                                 editor.apply()
                             customProgressDialog.dismiss()
-                            startActivity(Intent(this,MainActivity::class.java))
+                            startActivity(Intent(this, HomeActivity::class.java))
                             finish()
                         } else {
                             customProgressDialog.dismiss()

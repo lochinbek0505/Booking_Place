@@ -7,6 +7,7 @@ import android.util.Log
 import com.example.bookingplace.databinding.ActivitySelectEatsBinding
 import com.example.bookingplace.model.menu_model
 import com.example.bookingplace.model.restoran_model
+import com.example.bookingplace.model.restoran_model_finish
 
 class SelectEatsActivity : AppCompatActivity() {
 
@@ -28,11 +29,7 @@ class SelectEatsActivity : AppCompatActivity() {
         binding.tvStar.text = intent.star
 
         var check = true
-        binding.bthAdd.setOnClickListener {
 
-            startActivity(Intent(this, SelectPlaceActivity::class.java))
-
-        }
         binding.ivFv.setOnClickListener {
 
             if (check) {
@@ -51,14 +48,28 @@ class SelectEatsActivity : AppCompatActivity() {
 
         }
 
+        val eats=ArrayList<String>()
+
         val adapter = MenuAdapter(list, object : MenuAdapter.ItemSetOnClickListener {
             override fun onClick(data: menu_model) {
-                Log.e("aa", "click")
+                eats.add(data.name)
+                Log.e("aaabbbccc",data.name)
             }
         })
 
         binding.rvAse.adapter = adapter
 
+
+        binding.bthAdd.setOnClickListener {
+
+//            eats
+            val modell=restoran_model_finish(intent.name,intent.locate,intent.image,intent.star,eats)
+
+            val intent=Intent(this, SelectPlaceActivity::class.java)
+            intent.putExtra("modell",modell)
+            startActivity(intent)
+
+        }
 
     }
 }

@@ -129,7 +129,7 @@ class UploadImageActivity : AppCompatActivity() {
             .add(userData)
             .addOnSuccessListener { documentReference ->
                 customProgressDialog.dismiss()
-                startActivity(Intent(this, MainActivity::class.java))
+                startActivity(Intent(this, HomeActivity::class.java))
                 finish()
 
             }

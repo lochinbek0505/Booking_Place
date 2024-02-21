@@ -1,25 +1,39 @@
 package com.example.bookingplace
 
+import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.GradientDrawable
+import android.icu.text.SimpleDateFormat
+import android.icu.util.Calendar
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
+import com.bumptech.glide.Glide
 import com.example.bookingplace.databinding.ActivitySelectPlaceBinding
+import com.example.bookingplace.model.User
+import com.example.bookingplace.model.order_model
+import com.example.bookingplace.model.restoran_model_finish
+import com.google.firebase.firestore.FirebaseFirestore
+import java.util.Locale
 
 class SelectPlaceActivity : AppCompatActivity() {
 
     lateinit var binding: ActivitySelectPlaceBinding
     var count = 0
-    var count2 = 0
+    var count2 = 1
+    var date = ""
+
+    private lateinit var customProgressDialog: CustomProgressDialog
+    val db = FirebaseFirestore.getInstance()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -27,6 +41,14 @@ class SelectPlaceActivity : AppCompatActivity() {
 
         setContentView(binding.root)
 
+        val data1 = intent.getSerializableExtra("modell") as restoran_model_finish
+
+        binding.tvName.text = data1.name
+        binding.tvLocate.text = data1.locate
+        binding.tvStar.text = data1.star
+        customProgressDialog = CustomProgressDialog(this)
+
+        Glide.with(this).load(data1.image).into(binding.ivIhv)
         binding.seekBar.isEnabled = false
         val seek = binding.seekBar
         binding.seekBar.progressDrawable.setColorFilter(
@@ -39,11 +61,28 @@ class SelectPlaceActivity : AppCompatActivity() {
 
         }
 
+        binding.tvDate.setOnClickListener {
+
+            showDatePickerDialog()
+
+        }
+
         binding.btnFinish.setOnClickListener {
 
-            customToast("Buyurtma qabul qilindi !")
-            startActivity(Intent(this, MainActivity::class.java))
-            finish()
+            if (count2 == 0 || count == 0 || date == "") {
+
+                Toast.makeText(this, "Iltimos hamma maydonni to'liq to'ldiring", Toast.LENGTH_LONG)
+                    .show()
+
+
+            } else {
+
+
+                data1.list
+                addOrder(data1.name, date, data1.list, count.toString(), count2.toString())
+
+
+            }
 
         }
         binding.seekBar2.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
@@ -379,6 +418,26 @@ class SelectPlaceActivity : AppCompatActivity() {
         }
     }
 
+    private fun addOrder(
+        name: String,
+        date: String,
+        list: ArrayList<String>,
+        countCh: String,
+        countP: String
+    ) {
+        var eats1 = ""
+        val stringWithAddedText = StringBuilder(eats1)
+
+        for (text in list) {
+            stringWithAddedText.append(" $text,")
+        }
+
+        val modal = order_model(name, date, countCh, countP)
+
+        uploadBase(modal)
+
+    }
+
 
     fun giveAtb(id: Int): Int {
 
@@ -442,6 +501,66 @@ class SelectPlaceActivity : AppCompatActivity() {
         toast.view = textView
 //        toast.setGravity(Gravity.BOTTOM, 0, 0)
         toast.show()
+    }
+
+    fun order_model.toMap(): Map<String, Any> {
+        return mapOf(
+            "restoran" to restoran,
+            "date" to date,
+            "count_chair" to count_chair,
+            "count_per" to count_per
+        )
+    }
+
+    fun showDatePickerDialog() {
+        val calendar = Calendar.getInstance()
+        val currentYear = calendar.get(Calendar.YEAR)
+        val currentMonth = calendar.get(Calendar.MONTH)
+        val currentDay = calendar.get(Calendar.DAY_OF_MONTH)
+
+        val datePickerDialog = DatePickerDialog(
+            this,
+            { _, year, month, dayOfMonth ->
+                val selectedDate = Calendar.getInstance()
+                selectedDate.set(year, month, dayOfMonth)
+
+                val sdf = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
+                val formattedDate = sdf.format(selectedDate.time)
+
+
+                date = formattedDate
+                binding.tvDate.text = "Sanani belgilang: $date"
+
+
+            },
+            currentYear,
+            currentMonth,
+            currentDay
+        )
+
+
+        datePickerDialog.show()
+    }
+
+    fun uploadBase(model: order_model) {
+
+        val userData = model.toMap()
+        customProgressDialog.show()
+        db.collection("ORDERS")
+            .add(userData)
+            .addOnSuccessListener { documentReference ->
+                customProgressDialog.dismiss()
+                customToast("Buyurtma qabul qilindi !")
+
+                startActivity(Intent(this, HomeActivity::class.java))
+                finish()
+
+            }
+            .addOnFailureListener { e ->
+                customProgressDialog.dismiss()
+                Toast.makeText(this, "Error adding user", Toast.LENGTH_LONG).show()
+                Log.w("TAG123", "Error adding document", e)
+            }
     }
 
 }

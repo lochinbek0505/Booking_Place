@@ -186,7 +186,7 @@
                     android:paddingTop="5dp"
                     android:paddingEnd="10dp"
                     android:paddingBottom="5dp"
-                    android:text="1"
+                    android:text="0"
                     android:textColor="@color/black"
                     android:textSize="19sp" />
 
@@ -247,12 +247,24 @@
                     android:textSize="19sp" />
 
             </RelativeLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sanani belgilang: 00-00-0000"
+                android:id="@+id/tv_date"
+                android:layout_below="@id/rl3_asp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="15dp"
+                android:textColor="@color/broun"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                />
 
             <RelativeLayout
                 android:id="@+id/rl2_asp"
                 android:layout_width="360dp"
                 android:layout_height="420dp"
-                android:layout_below="@+id/rl3_asp"
+                android:layout_below="@+id/tv_date"
                 android:layout_centerHorizontal="true"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="45dp"
