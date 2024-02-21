@@ -1,5 +1,7 @@
 package com.example.bookingplace.ui.dashboard
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -18,7 +20,7 @@ import com.google.firebase.firestore.toObject
 class DashboardFragment : Fragment() {
 
     private var _binding: FragmentDashboardBinding? = null
-
+    private lateinit var sharedPreferences: SharedPreferences
 
     private val binding get() = _binding!!
 
@@ -30,12 +32,14 @@ class DashboardFragment : Fragment() {
 
         _binding = FragmentDashboardBinding.inflate(inflater, container, false)
         val root: View = binding.root
+        sharedPreferences = requireActivity().getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
+        val uid = sharedPreferences.getString("uid", "") ?: ""
 
         val list = ArrayList<order_model>()
 
         val db = FirebaseFirestore.getInstance()
 
-        val collectionRef = db.collection("ORDERS")
+        val collectionRef = db.collection("ORDERS_$uid")
 
         collectionRef.get().addOnSuccessListener { documents ->
 

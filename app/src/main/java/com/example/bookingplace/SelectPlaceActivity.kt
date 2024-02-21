@@ -3,6 +3,7 @@ package com.example.bookingplace
 import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.ColorDrawable
@@ -31,6 +32,8 @@ class SelectPlaceActivity : AppCompatActivity() {
     var count = 0
     var count2 = 1
     var date = ""
+    private lateinit var sharedPreferences: SharedPreferences
+    var uid=""
 
     private lateinit var customProgressDialog: CustomProgressDialog
     val db = FirebaseFirestore.getInstance()
@@ -47,6 +50,8 @@ class SelectPlaceActivity : AppCompatActivity() {
         binding.tvLocate.text = data1.locate
         binding.tvStar.text = data1.star
         customProgressDialog = CustomProgressDialog(this)
+        sharedPreferences = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
+        uid = sharedPreferences.getString("uid", "") ?: ""
 
         Glide.with(this).load(data1.image).into(binding.ivIhv)
         binding.seekBar.isEnabled = false
@@ -546,7 +551,7 @@ class SelectPlaceActivity : AppCompatActivity() {
 
         val userData = model.toMap()
         customProgressDialog.show()
-        db.collection("ORDERS")
+        db.collection("ORDERS_$uid")
             .add(userData)
             .addOnSuccessListener { documentReference ->
                 customProgressDialog.dismiss()

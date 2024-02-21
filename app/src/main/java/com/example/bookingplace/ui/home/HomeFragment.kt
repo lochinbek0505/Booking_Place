@@ -1,6 +1,8 @@
 package com.example.bookingplace.ui.home
 
+import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -141,6 +143,11 @@ class HomeFragment : Fragment() {
 
         binding.rvAm.adapter = adapter
 
+        binding.ivImageUser.setOnClickListener {
+
+            showAlertDialog()
+
+        }
         return root
     }
 
@@ -169,6 +176,31 @@ class HomeFragment : Fragment() {
             }
 
 
+    }
+
+    private fun showAlertDialog() {
+        val alertDialogBuilder = AlertDialog.Builder(requireActivity())
+
+        // Set the title and message for the AlertDialog
+        alertDialogBuilder.setTitle("Diqqat")
+        alertDialogBuilder.setMessage("Akkountdan chiqmoqchimisiz")
+
+        // Set a positive button and its click listener
+        alertDialogBuilder.setPositiveButton("Ha") { dialog: DialogInterface, _: Int ->
+
+
+            val editor = sharedPreferences.edit()
+            editor.putString("uid","")
+            editor.apply()
+            requireActivity().finishAffinity()
+        }
+        alertDialogBuilder.setNegativeButton("Yo'q") { dialog: DialogInterface, _: Int ->
+            // Dismiss the dialog when the OK button is clicked
+            dialog.dismiss()
+        }
+        // Create and show the AlertDialog
+        val alertDialog = alertDialogBuilder.create()
+        alertDialog.show()
     }
 
     override fun onDestroyView() {
