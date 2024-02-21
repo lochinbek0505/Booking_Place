@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "790408891188",
+    "project_id": "restourantbooking",
+    "storage_bucket": "restourantbooking.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:790408891188:android:6a02a3b26701e13a3ef361",
+        "android_client_info": {
+          "package_name": "com.example.bookingplace"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDtvJeDhtw4WiQey0_1Mut9BZrl9g4ilhM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
